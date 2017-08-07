@@ -215,9 +215,10 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
+add_executable(turtlebot_joy src/turtlebot_joy.cpp)
 add_executable(hello_world_node src/hello_world_node.cpp)
 #add_dependencies(hello_world_node my_first_ros_pkg_generate_messages_cpp)
+target_link_libraries(turtlebot_joy ${catkin_LIBRARIES})
 target_link_libraries(hello_world_node ${catkin_LIBRARIES})
 
 

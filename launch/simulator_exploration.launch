@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- Turtlebot simulator with navigation -->
+	<include file="$(find turtleNavLiu)/launch/turtlebot_simulator.launch">
+		<arg name="map_file" value="$(find turtleNavLiu)/maps/maze.yaml"/>
+		<arg name="world_file" value="$(find turtleNavLiu)/maps/stage/maze.world"/>
+	</include>
+
+	<!-- SLAM for global map and map->base_link tf -->
+	<node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+		<param name="xmin" value="-1.0"/>
+		<param name="xmax" value="1.0"/>
+		<param name="ymin" value="-1.0"/>
+		<param name="ymax" value="1.0"/>
+	</node>
+
+
+
+	<!--  **************** Visualisation ****************  -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find turtleNavLiu)/rviz/simulator_exploration.rviz"/>
+</launch>

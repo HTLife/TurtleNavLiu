@@ -1,0 +1,11 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=true
+TerminalOptions=bash
+Icon[en_US]=./base.jpg
+Name[en_US]=keyboard
+Exec=bash -c "source /opt/ros/kinetic/setup.bash && source ~/catkin_ws/devel/setup.bash && source ~/rocon/devel/setup.bash && source ~/turtlebot/devel/setup.bash && roslaunch turtlebot_teleop keyboard_teleop.launch"
+Name=keyboard
+Icon=./base.jpg
