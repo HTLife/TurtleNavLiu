@@ -9,6 +9,9 @@
 #include "boost/thread/thread.hpp"
 #include "ros/console.h"
 
+#include <vector>
+
+using namespace std;
 
 class TurtlebotTeleop
 {
@@ -72,10 +75,54 @@ void TurtlebotTeleop::publish()
 
 void chatterCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
 {
+    //nav_msgs::OccupancyGrid map = msg;
+
     std_msgs::Header header = msg->header;
     nav_msgs::MapMetaData info = msg->info;
     ROS_INFO("Got map %d %d", info.width, info.height);
 
+    int rows;
+    int cols;
+    double mapResolution;
+    vector<vector<bool> > grid;
+
+    rows = info.height;
+    cols = info.width;
+    mapResolution = info.resolution;
+    
+    grid.resize(rows);
+    for (int i = 0; i < rows; i++) 
+    {
+        grid[i].resize(cols);
+    }
+    int currCell = 0;
+    for (int i = 0; i < rows; i++)  
+    {
+        for (int j = 0; j < cols; j++)      
+        {
+            if (msg->data[currCell] == 0) // unoccupied cell
+            {
+                grid[i][j] = false;
+            }
+            else
+            {
+                grid[i][j] = true; // occupied (100) or unknown cell (-1)
+            }
+            currCell++;
+        }
+    }
+    
+    
+    printf("Grid map:\n");    
+    for (int i = 0; i < rows; i++)
+    {
+        printf("Row no. %d\n", i);
+        for (int j = 0; j < cols; j++)
+        {
+            printf("%d ", grid[i][j] ? 1 : 0);
+        }
+        printf("\n");
+    }
 }
 
 int main(int argc, char** argv)
