@@ -2,7 +2,7 @@
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
-
+#include "nav_msgs/OccupancyGrid.h"
 
 #include <sensor_msgs/Joy.h>
 #include "boost/thread/mutex.hpp"
@@ -70,11 +70,21 @@ void TurtlebotTeleop::publish()
     vel_pub_.publish(last_published_);
 }
 
+void chatterCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+{
+    std_msgs::Header header = msg->header;
+    nav_msgs::MapMetaData info = msg->info;
+    ROS_INFO("Got map %d %d", info.width, info.height);
+
+}
 
 int main(int argc, char** argv)
 {//cmd_vel_mux/input/teleop
     ros::init(argc, argv, "keyboard");
+    ros::NodeHandle n;
+    ros::Subscriber sub = n.subscribe("map", 1000, chatterCallback);
     //ros::init(argc, argv, "turtlebot_teleop");
+
     TurtlebotTeleop turtlebot_teleop;
     
     ros::Rate loop_rate(10);
@@ -82,6 +92,7 @@ int main(int argc, char** argv)
     {
         
         turtlebot_teleop.publish();
+
         //ros::spin();
         ros::spinOnce();
         loop_rate.sleep();
